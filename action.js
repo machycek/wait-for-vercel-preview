@@ -135,9 +135,7 @@ const waitForStatus = async ({
         owner,
         repo,
         deployment_id,
-      });
-      
-      console.log({ statuses });
+      }).filter(status => status.target_url.startsWith('https://staging-'));
 
       const status = statuses.data.length > 0 && statuses.data[0];
 
