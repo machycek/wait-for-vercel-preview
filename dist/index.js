@@ -141,7 +141,7 @@ const waitForStatus = async ({
         owner,
         repo,
         deployment_id,
-      }).filter(status => status.target_url.startsWith('https://staging-'));
+      });
 
       const status = statuses.data.length > 0 && statuses.data[0];
 
@@ -227,15 +227,11 @@ const waitForDeploymentToStart = async ({
       const deployment =
         deployments.data.length > 0 &&
         deployments.data.find((deployment) => {
-          console.log('one deployment', JSON.stringify(deployment, null, 2));
           return deployment.creator.login === actorName;
         });
 
-      console.log(deployment)
-      console.log(deployments && deployments[0] ? deployments[0].url : "nope")
-      console.log(JSON.stringify(deployments, null, 2))
-
       if (deployment) {
+        console.log(deployment);
         return deployment;
       }
 
@@ -298,6 +294,8 @@ const run = async () => {
     }
 
     const octokit = github.getOctokit(GITHUB_TOKEN);
+
+    let list = await octokit.rest.repos.listDeployments();
 
     const context = github.context;
     const owner = context.repo.owner;
