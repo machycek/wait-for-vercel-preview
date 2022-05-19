@@ -221,8 +221,13 @@ const waitForDeploymentToStart = async ({
       const deployment =
         deployments.data.length > 0 &&
         deployments.data.find((deployment) => {
+          console.log('one deployment', JSON.stringify(deployment, null, 2));
           return deployment.creator.login === actorName;
         });
+
+      console.log(deployment)
+      console.log(deployments && deployments[0] ? deployments[0].url : "nope")
+      console.log(JSON.stringify(deployments, null, 2))
 
       if (deployment) {
         return deployment;
