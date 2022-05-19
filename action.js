@@ -221,7 +221,7 @@ const waitForDeploymentToStart = async ({
       const deployment =
         deployments.data.length > 0 &&
         deployments.data.find((deployment) => {
-          return deployment.creator.login === actorName;
+          return deployment.creator.login === actorName && deployment.environment.includes('staging-stake-kit');
         });
 
       if (deployment) {
