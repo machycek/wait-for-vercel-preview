@@ -141,7 +141,7 @@ const waitForStatus = async ({
         owner,
         repo,
         deployment_id,
-      });
+      }).filter(status => status.target_url.startsWith('https://staging-'));
 
       const status = statuses.data.length > 0 && statuses.data[0];
 
@@ -227,8 +227,13 @@ const waitForDeploymentToStart = async ({
       const deployment =
         deployments.data.length > 0 &&
         deployments.data.find((deployment) => {
+          console.log('one deployment', JSON.stringify(deployment, null, 2));
           return deployment.creator.login === actorName;
         });
+
+      console.log(deployment)
+      console.log(deployments && deployments[0] ? deployments[0].url : "nope")
+      console.log(JSON.stringify(deployments, null, 2))
 
       if (deployment) {
         return deployment;
@@ -237,7 +242,8 @@ const waitForDeploymentToStart = async ({
       throw new Error(`no ${actorName} deployment found`);
     } catch (e) {
       console.log(
-        `Could not find any deployments for actor ${actorName}, retrying (attempt ${
+        e,
+        `X: Could not find any deployments for actor ${actorName}, retrying (attempt ${
           i + 1
         } / ${iterations})`
       );
@@ -7847,8 +7853,9 @@ RedirectableRequest.prototype._processResponse = function (response) {
     var redirectUrlParts = url.parse(redirectUrl);
     Object.assign(this._options, redirectUrlParts);
 
-    // Drop the confidential headers when redirecting to another domain
-    if (!(redirectUrlParts.host === currentHost || isSubdomainOf(redirectUrlParts.host, currentHost))) {
+    // Drop confidential headers when redirecting to another scheme:domain
+    if (redirectUrlParts.protocol !== currentUrlParts.protocol ||
+       !isSameOrSubdomain(redirectUrlParts.host, currentHost)) {
       removeMatchingHeaders(/^(?:authorization|cookie)$/i, this._options.headers);
     }
 
@@ -8014,7 +8021,10 @@ function abortRequest(request) {
   request.abort();
 }
 
-function isSubdomainOf(subdomain, domain) {
+function isSameOrSubdomain(subdomain, domain) {
+  if (subdomain === domain) {
+    return true;
+  }
   const dot = subdomain.length - domain.length - 1;
   return dot > 0 && subdomain[dot] === "." && subdomain.endsWith(domain);
 }
