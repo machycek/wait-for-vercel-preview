@@ -123,7 +123,7 @@ const waitForStatus = async ({
   allowInactive,
   checkIntervalInMilliseconds,
 }) => {
-  const octokit = new github.getOctokit(token);
+  const octokit = github.getOctokit(token);
   const iterations = calculateIterations(
     maxTimeout,
     checkIntervalInMilliseconds
@@ -288,8 +288,6 @@ const run = async () => {
     }
 
     const octokit = github.getOctokit(GITHUB_TOKEN);
-
-    let list = await octokit.rest.repos.listDeployments();
 
     const context = github.context;
     const owner = context.repo.owner;
