@@ -203,6 +203,7 @@ const waitForDeploymentToStart = async ({
   actorName = 'vercel[bot]',
   maxTimeout = 20,
   checkIntervalInMilliseconds = 2000,
+  urlPart,
 }) => {
   const iterations = calculateIterations(
     maxTimeout,
@@ -221,7 +222,10 @@ const waitForDeploymentToStart = async ({
       const deployment =
         deployments.data.length > 0 &&
         deployments.data.find((deployment) => {
-          return deployment.creator.login === actorName && deployment.environment.includes('staging-stake-kit');
+          return (
+            deployment.creator.login === actorName &&
+            deployment.environment.includes(urlPart)
+          );
         });
 
       if (deployment) {
@@ -274,6 +278,8 @@ const run = async () => {
   try {
     // Inputs
     const GITHUB_TOKEN = core.getInput('token', { required: true });
+    const URL_PART = core.getInput('url_part', { required: true });
+
     const VERCEL_PASSWORD = core.getInput('vercel_password');
     const ENVIRONMENT = core.getInput('environment');
     const MAX_TIMEOUT = Number(core.getInput('max_timeout')) || 60;
@@ -324,6 +330,7 @@ const run = async () => {
       actorName: 'vercel[bot]',
       maxTimeout: MAX_TIMEOUT / 2,
       checkIntervalInMilliseconds: CHECK_INTERVAL_IN_MS,
+      urlPart: URL_PART,
     });
 
     if (!deployment) {
