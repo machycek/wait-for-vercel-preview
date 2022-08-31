@@ -7,6 +7,9 @@ inputs:
   token:
     description: 'The Github Secret'
     required: true
+  url_part:
+    description: 'Vercel deployment url part you want to wait for if you have multiple vercel builds connect to repository'
+    required: true
   max_timeout:
     description: 'The max time to run the action'
     required: false
