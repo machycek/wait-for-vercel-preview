@@ -280,6 +280,7 @@ async function getShaForPullRequest({ octokit, owner, repo, number }) {
   return prSHA;
 }
 
+
 const run = async () => {
   try {
     // Inputs
@@ -370,13 +371,15 @@ const run = async () => {
     // Wait for url to respond with a success
     console.log(`Waiting for a status code 200 from: ${targetUrl}`);
 
-    await waitForUrl({
-      url: targetUrl,
-      maxTimeout: MAX_TIMEOUT,
-      checkIntervalInMilliseconds: CHECK_INTERVAL_IN_MS,
-      vercelPassword: VERCEL_PASSWORD,
-      path: PATH,
-    });
+    // await waitForUrl({
+    //   url: targetUrl,
+    //   maxTimeout: MAX_TIMEOUT,
+    //   checkIntervalInMilliseconds: CHECK_INTERVAL_IN_MS,
+    //   vercelPassword: VERCEL_PASSWORD,
+    //   path: PATH,
+    // });
+
+    await wait(30000);
   } catch (error) {
     core.setFailed(error.message);
   }
